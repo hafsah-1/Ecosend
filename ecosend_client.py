@@ -91,7 +91,12 @@ def _make_request(endpoint, params=None):
     params['site_token'] = SITE_TOKEN
     
     resp = requests.get(url, params=params)
-    resp.raise_for_status()
+    
+    # Better error handling
+    if resp.status_code != 200:
+        error_msg = f"API Error {resp.status_code}: {resp.text[:200]}"
+        raise Exception(error_msg)
+    
     return resp.json()
 
 
