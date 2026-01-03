@@ -14,7 +14,7 @@ def check_password():
     
     def login_form():
         """Display the login form."""
-        st.title("🔐 EcosendPCE Hubs Reports")
+        st.title("🔐 Ecosend PCE Hubs Reports")
         st.write("Please log in to access the report generator.")
         
         with st.form("login_form"):
