@@ -24,9 +24,10 @@ def get_credentials():
     # Try Streamlit secrets first (for cloud deployment)
     try:
         import streamlit as st
-        api_key = st.secrets.get("ecosend", {}).get("api_key")
-        site_token = st.secrets.get("ecosend", {}).get("site_token")
-    except Exception:
+        if "ecosend" in st.secrets:
+            api_key = st.secrets["ecosend"]["api_key"]
+            site_token = st.secrets["ecosend"]["site_token"]
+    except Exception as e:
         pass
     
     # Fall back to environment variables
