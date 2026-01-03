@@ -110,14 +110,14 @@ def generate_membership_breakdown_report():
     
     # Generate filename with date prefix (YYYYMMDD format for easy sorting)
     date_prefix = datetime.datetime.now().strftime("%Y%m%d")
-    filename_with_date = f"{date_prefix}_membership.xlsx"
+    filename_with_date = f"{date_prefix}_pce_hub_report.xlsx"
     
     # Write to Excel
     df = pd.DataFrame(report_data)
     df.to_excel(filename_with_date, index=False)
     
     print(f"\n✅ Report exported to: {filename_with_date}")
-    return f"✅ Report exported to: {filename_with_date}"
+    return filename_with_date
 
 
 # === RUN ===

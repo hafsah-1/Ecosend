@@ -2,6 +2,7 @@ import streamlit as st
 import datetime
 import hmac
 import io
+import pandas as pd
 from report_1 import generate_faculty_activity_report
 from report_2 import generate_membership_breakdown_report
 from report_3 import generate_activity_per_hub_report
@@ -50,25 +51,25 @@ def check_password():
     return False
 
 
-def create_download_button(df, filename, label):
-    """Create a download button for an Excel file."""
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False)
-    output.seek(0)
-    
-    st.download_button(
-        label=f"📥 {label}",
-        data=output,
-        file_name=filename,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        use_container_width=True
-    )
+def offer_download(filename, label):
+    """Read an Excel file and offer it for download."""
+    try:
+        with open(filename, 'rb') as f:
+            file_data = f.read()
+        
+        st.download_button(
+            label=f"📥 {label}",
+            data=file_data,
+            file_name=filename,
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            use_container_width=True
+        )
+    except Exception as e:
+        st.error(f"Download error: {e}")
 
 
 def main_app():
     """Main application after authentication."""
-    import pandas as pd
     
     st.set_page_config(page_title="Ecosend Report Generator", layout="centered")
     
@@ -88,58 +89,35 @@ def main_app():
     st.title("📬 Ecosend Reports")
     st.write("Generate engagement and membership reports.")
     
-    today = datetime.datetime.now().strftime("%Y%m%d")
-    
     # Report buttons
     col1, col2 = st.columns(2)
     
     with col1:
         if st.button("📘 Faculty Activity Report", use_container_width=True):
             with st.spinner("Generating..."):
-                result = generate_faculty_activity_report()
-            st.success("✅ Report generated!")
-            # Read the file and offer download
-            try:
-                df = pd.read_excel(result)
-                create_download_button(df, result, "Download Faculty Report")
-            except Exception as e:
-                st.error(f"Error: {e}")
+                filename = generate_faculty_activity_report()
+            st.success(f"✅ Generated: `{filename}`")
+            offer_download(filename, "Download Faculty Report")
         
         if st.button("📊 Membership Breakdown", use_container_width=True):
             with st.spinner("Generating..."):
-                result = generate_membership_breakdown_report()
-            st.success("✅ Report generated!")
-            try:
-                filename = f"{today}_pce_hub_report.xlsx"
-                df = pd.read_excel(filename)
-                create_download_button(df, filename, "Download Membership Report")
-            except Exception as e:
-                st.error(f"Error: {e}")
+                filename = generate_membership_breakdown_report()
+            st.success(f"✅ Generated: `{filename}`")
+            offer_download(filename, "Download Membership Report")
     
     with col2:
         if st.button("🌐 Activity per Hub", use_container_width=True):
             with st.spinner("Generating..."):
-                result = generate_activity_per_hub_report()
-            st.success("✅ Report generated!")
-            try:
-                df = pd.read_excel(result)
-                create_download_button(df, result, "Download Hub Report")
-            except Exception as e:
-                st.error(f"Error: {e}")
+                filename = generate_activity_per_hub_report()
+            st.success(f"✅ Generated: `{filename}`")
+            offer_download(filename, "Download Hub Report")
         
         if st.button("🏫 UoS vs Non-UoS", use_container_width=True):
             with st.spinner("Generating..."):
-                result = generate_uos_non_uos_activity_report()
-            st.success("✅ Report generated!")
-            try:
-                df = pd.read_excel(result)
-                create_download_button(df, result, "Download UoS Report")
-            except Exception as e:
-                st.error(f"Error: {e}")
+                filename = generate_uos_non_uos_activity_report()
+            st.success(f"✅ Generated: `{filename}`")
+            offer_download(filename, "Download UoS Report")
 
-
-# Need pandas for download functionality
-import pandas as pd
 
 # Run the app
 if check_password():
