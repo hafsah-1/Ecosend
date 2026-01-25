@@ -177,7 +177,7 @@ def main_app():
         
         ---
         
-        **Step 1:** Go to [Ecosend People](https://app.ecosend.io/people) and click on **Smart Groups**
+        **Step 1:** Go to [Ecosend](https://app.ecosend.io), click on **Contacts**, then scroll down on the left sidebar to find **Smart Groups**
         
         **Step 2:** Find and open the **"Active (Last 90 Days)"** smart group
         
