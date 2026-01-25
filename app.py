@@ -188,7 +188,7 @@ def main_app():
         - Remove any broadcasts older than 90 days
         """)
         
-        st.image("images/ecosend_messages_menu.png", caption="Select 'Opened message' from the Messages tab", width=400)
+        st.image("images/ecosend_messages_menu.png", caption="Select 'Opened message' from the Messages tab")
         st.image("images/ecosend_filter_bar.png", caption="Add broadcasts with '+ OR' between them")
         
         st.markdown("""
