@@ -1,5 +1,6 @@
+streamlit>=1.30.0
 requests
 pandas
 openpyxl
-streamlit
 python-dotenv
+altair<5
