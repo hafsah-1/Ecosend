@@ -168,6 +168,36 @@ def main_app():
     st.subheader("📈 Activity Reports")
     st.caption("Track engagement based on the 'Active (Last 90 Days)' smart group")
     
+    # Help expander with instructions
+    with st.expander("ℹ️ **Before generating**: Update the Active smart group in Ecosend"):
+        st.markdown("""
+        ⚠️ **Important**: Ecosend doesn't provide broadcast activity data through its API, so we track activity using a manually-maintained Smart Group.
+        
+        **Before generating activity reports, update the 'Active (Last 90 Days)' smart group:**
+        
+        ---
+        
+        **Step 1:** Go to [Ecosend People](https://app.ecosend.io/people) and click on **Smart Groups**
+        
+        **Step 2:** Find and open the **"Active (Last 90 Days)"** smart group
+        
+        **Step 3:** Update the filter rules:
+        - Click the **Messages** tab in the filter menu
+        - Select **"Opened message"** 
+        - Add each broadcast from the **last 90 days** using **+ OR** between them
+        - Remove any broadcasts older than 90 days
+        
+        **Step 4:** Click **★ Save Smart Group** to save your changes
+        
+        **Step 5:** Come back here and generate your reports!
+        
+        ---
+        
+        💡 **Tip**: For fair hub comparisons, include broadcasts sent to "All Hubs" - this ensures every hub member had a chance to engage.
+        """)
+    
+    st.write("")
+    
     col3, col4 = st.columns(2)
     
     with col3:
