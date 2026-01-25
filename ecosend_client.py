@@ -49,11 +49,11 @@ if not API_KEY or not SITE_TOKEN:
 # === Smart Group slug mappings ===
 # Faculty smart groups (slug -> display name)
 FACULTY_SMART_GROUPS = {
-    'fah-faculty-of-arts-humanities': 'FAH (Faculty of Arts & Humanities)',
-    'fels-faculty-of-environmental-life-sciences': 'FELS (Faculty of Environmental & Life Sciences)',
-    'feps-faculty-of-engineering-physical-sciences': 'FEPS (Faculty of Engineering & Physical Sciences)',
-    'fm-faculty-of-medicine': 'FM (Faculty of Medicine)',
-    'fss-faculty-of-social-sciences': 'FSS (Faculty of Social Sciences)',
+    'fah-faculty-of-arts-humanities': 'FAH',
+    'fels-faculty-of-environmental-life-sciences': 'FELS',
+    'feps-faculty-of-engineering-physical-sciences': 'FEPS',
+    'fm-faculty-of-medicine': 'FM',
+    'fss-faculty-of-social-sciences': 'FSS',
     'professional-services': 'Professional Services'
 }
 
@@ -72,6 +72,9 @@ HUB_PROPERTIES = {v: k for k, v in HUB_SMART_GROUPS.items()}
 # Smart group for UoS status
 UOS_SMART_GROUP = 'work-study-at-the-uos'
 ALUMNI_SMART_GROUP = 'alumni-of-the-uos'
+
+# Smart group for active users (manually maintained - people who opened emails in last 90 days)
+ACTIVE_SMART_GROUP = 'active-last-90-days'
 
 # Property for UoS status (fallback from custom properties)
 UOS_STATUS_PROPERTY = 'Do you currently work or study at the UoS?'

@@ -10,7 +10,7 @@ import pandas as pd
 from ecosend_client import (
     get_all_people,
     FACULTY_SMART_GROUPS,
-    get_since_date
+    ACTIVE_SMART_GROUP
 )
 
 
@@ -46,27 +46,19 @@ def get_list_members():
 
 def get_active_emails(people):
     """
-    Get emails of people who have been active in the last 90 days.
-    Uses last_seen or engaged_at timestamps.
+    Get emails of people who are in the 'Active (Last 90 Days)' smart group.
+    This smart group is manually maintained in Ecosend.
     """
     active_emails = set()
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=90)
     
     for person in people:
         email = person.get('email', '').lower()
         if not email:
             continue
         
-        last_seen = person.get('last_seen') or person.get('engaged_at')
-        
-        if last_seen:
-            try:
-                if isinstance(last_seen, str):
-                    seen_date = datetime.datetime.fromisoformat(last_seen.replace('Z', '+00:00'))
-                    if seen_date >= cutoff:
-                        active_emails.add(email)
-            except (ValueError, TypeError):
-                pass
+        smart_groups = person.get('smart_groups', [])
+        if ACTIVE_SMART_GROUP in smart_groups:
+            active_emails.add(email)
     
     return active_emails
 

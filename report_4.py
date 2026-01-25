@@ -9,7 +9,8 @@ import datetime
 import pandas as pd
 from ecosend_client import (
     get_all_people,
-    UOS_SMART_GROUP
+    UOS_SMART_GROUP,
+    ACTIVE_SMART_GROUP
 )
 
 
@@ -44,32 +45,27 @@ def get_list_members():
 def get_active_emails_by_status(people, uos_emails, non_uos_emails):
     """
     Get active emails classified by UoS status.
+    Uses the 'Active (Last 90 Days)' smart group which is manually maintained.
     
     Returns:
         Tuple of (active_uos_emails, active_non_uos_emails)
     """
     active_uos_emails = set()
     active_non_uos_emails = set()
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=90)
     
     for person in people:
         email = person.get('email', '').lower()
         if not email:
             continue
         
-        last_seen = person.get('last_seen') or person.get('engaged_at')
+        smart_groups = person.get('smart_groups', [])
         
-        if last_seen:
-            try:
-                if isinstance(last_seen, str):
-                    seen_date = datetime.datetime.fromisoformat(last_seen.replace('Z', '+00:00'))
-                    if seen_date >= cutoff:
-                        if email in uos_emails:
-                            active_uos_emails.add(email)
-                        elif email in non_uos_emails:
-                            active_non_uos_emails.add(email)
-            except (ValueError, TypeError):
-                pass
+        # Check if person is in the active smart group
+        if ACTIVE_SMART_GROUP in smart_groups:
+            if email in uos_emails:
+                active_uos_emails.add(email)
+            elif email in non_uos_emails:
+                active_non_uos_emails.add(email)
     
     return active_uos_emails, active_non_uos_emails
 

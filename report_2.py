@@ -78,15 +78,15 @@ def generate_membership_breakdown_report():
     for hub, counts in hubs_counts.items():
         hub_data = {
             'PCE Hub': hub,
-            'Total UoS': counts['total'],
+            'Total': counts['total'],
             'Non-Current UoS': counts['non_current'],
             'Current UoS': counts['current'],
             'Alumni': counts['alumni'],
-            'FAH': counts['faculties'].get('FAH (Faculty of Arts & Humanities)', {}).get('total', 0),
-            'FELS': counts['faculties'].get('FELS (Faculty of Environmental & Life Sciences)', {}).get('total', 0),
-            'FEPS': counts['faculties'].get('FEPS (Faculty of Engineering & Physical Sciences)', {}).get('total', 0),
-            'FM': counts['faculties'].get('FM (Faculty of Medicine)', {}).get('total', 0),
-            'FSS': counts['faculties'].get('FSS (Faculty of Social Sciences)', {}).get('total', 0),
+            'FAH': counts['faculties'].get('FAH', {}).get('total', 0),
+            'FELS': counts['faculties'].get('FELS', {}).get('total', 0),
+            'FEPS': counts['faculties'].get('FEPS', {}).get('total', 0),
+            'FM': counts['faculties'].get('FM', {}).get('total', 0),
+            'FSS': counts['faculties'].get('FSS', {}).get('total', 0),
             'PS': counts['faculties'].get('Professional Services', {}).get('total', 0),
         }
         report_data.append(hub_data)
@@ -94,7 +94,7 @@ def generate_membership_breakdown_report():
     # Calculate "All Hubs" row (totals across all contacts)
     all_hubs_row = {
         'PCE Hub': 'All Hubs',
-        'Total UoS': len(people),
+        'Total': len(people),
         'Non-Current UoS': sum(1 for p in people if UOS_SMART_GROUP not in p.get('smart_groups', [])),
         'Current UoS': sum(1 for p in people if UOS_SMART_GROUP in p.get('smart_groups', [])),
         'Alumni': sum(1 for p in people if ALUMNI_SMART_GROUP in p.get('smart_groups', [])),

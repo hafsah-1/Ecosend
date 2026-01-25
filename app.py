@@ -14,21 +14,34 @@ def check_password():
     
     def login_form():
         """Display the login form."""
-        st.title("🔐 Ecosend PCE Hubs Reports")
-        st.write("Please log in to access the report generator.")
+        st.markdown("""
+            <style>
+            .login-header {
+                text-align: center;
+                padding: 2rem 0;
+            }
+            </style>
+        """, unsafe_allow_html=True)
         
-        with st.form("login_form"):
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            submitted = st.form_submit_button("Log In", use_container_width=True)
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.title("🔐 PCE Hubs Reports")
+            st.caption("Powered by Ecosend")
+            st.write("")
             
-            if submitted:
-                if check_credentials(username, password):
-                    st.session_state["authenticated"] = True
-                    st.session_state["username"] = username
-                    st.rerun()
-                else:
-                    st.error("😕 Invalid username or password")
+            with st.form("login_form"):
+                username = st.text_input("Username")
+                password = st.text_input("Password", type="password")
+                st.write("")
+                submitted = st.form_submit_button("Log In", use_container_width=True, type="primary")
+                
+                if submitted:
+                    if check_credentials(username, password):
+                        st.session_state["authenticated"] = True
+                        st.session_state["username"] = username
+                        st.rerun()
+                    else:
+                        st.error("😕 Invalid username or password")
     
     def check_credentials(username, password):
         """Check if username and password are correct."""
@@ -68,55 +81,132 @@ def offer_download(filename, label):
         st.error(f"Download error: {e}")
 
 
+def report_card(title, icon, description, button_label, generate_func, download_label):
+    """Create a styled report card with description."""
+    with st.container(border=True):
+        st.subheader(f"{icon} {title}")
+        st.caption(description)
+        st.write("")
+        
+        if st.button(button_label, key=title, use_container_width=True, type="primary"):
+            with st.spinner("Generating report..."):
+                filename = generate_func()
+            st.success(f"✅ Report generated!")
+            offer_download(filename, download_label)
+
+
 def main_app():
     """Main application after authentication."""
     
-    st.set_page_config(page_title="Ecosend Report Generator", layout="centered")
+    st.set_page_config(
+        page_title="PCE Hubs Report Generator",
+        page_icon="📊",
+        layout="centered"
+    )
+    
+    # Custom CSS for nicer styling
+    st.markdown("""
+        <style>
+        .block-container {
+            padding-top: 2rem;
+        }
+        div[data-testid="stVerticalBlock"] > div:has(div.stButton) {
+            margin-bottom: 0.5rem;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     
     # Sidebar with user info and logout
     with st.sidebar:
-        st.write(f"👤 Logged in as: **{st.session_state.get('username', 'User')}**")
-        if st.button("🚪 Log Out"):
+        st.image("https://img.icons8.com/fluency/96/email-open.png", width=60)
+        st.title("PCE Hubs")
+        st.caption("Report Generator")
+        
+        st.divider()
+        
+        st.write(f"👤 **{st.session_state.get('username', 'User')}**")
+        
+        if st.button("🚪 Log Out", use_container_width=True):
             st.session_state["authenticated"] = False
             st.session_state["username"] = None
             st.rerun()
         
         st.divider()
-        st.caption("PCE Hubs Southampton")
-        st.caption("Powered by Ecosend")
+        
+        st.caption("University of Southampton")
+        st.caption("Public & Community Engagement")
     
-    # Page title
-    st.title("📬 Ecosend Reports")
-    st.write("Generate engagement and membership reports.")
+    # Page header
+    st.title("📊 Report Generator")
+    st.markdown("Generate engagement and membership reports from your Ecosend data.")
+    st.write("")
     
-    # Report buttons
+    # Membership Reports Section (most used - first)
+    st.subheader("👥 Membership Reports")
+    st.caption("Breakdown of contacts by hub, faculty, and status")
+    
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("📘 Faculty Activity Report", use_container_width=True):
-            with st.spinner("Generating..."):
-                filename = generate_faculty_activity_report()
-            st.success(f"✅ Generated: `{filename}`")
-            offer_download(filename, "Download Faculty Report")
-        
-        if st.button("📊 Membership Breakdown", use_container_width=True):
-            with st.spinner("Generating..."):
-                filename = generate_membership_breakdown_report()
-            st.success(f"✅ Generated: `{filename}`")
-            offer_download(filename, "Download Membership Report")
+        with st.container(border=True):
+            st.markdown("##### 📊 Membership Breakdown")
+            st.caption("Full breakdown of contacts per Hub, showing UoS status, alumni status, and faculty distribution.")
+            st.write("")
+            if st.button("Generate Membership Report", key="membership", use_container_width=True, type="primary"):
+                with st.spinner("Generating..."):
+                    filename = generate_membership_breakdown_report()
+                st.success("✅ Done!")
+                offer_download(filename, "Download Report")
     
     with col2:
-        if st.button("🌐 Activity per Hub", use_container_width=True):
-            with st.spinner("Generating..."):
-                filename = generate_activity_per_hub_report()
-            st.success(f"✅ Generated: `{filename}`")
-            offer_download(filename, "Download Hub Report")
-        
-        if st.button("🏫 UoS vs Non-UoS", use_container_width=True):
-            with st.spinner("Generating..."):
-                filename = generate_uos_non_uos_activity_report()
-            st.success(f"✅ Generated: `{filename}`")
-            offer_download(filename, "Download UoS Report")
+        pass  # Empty for now
+    
+    st.write("")
+    st.divider()
+    
+    # Activity Reports Section  
+    st.subheader("📈 Activity Reports")
+    st.caption("Track engagement based on the 'Active (Last 90 Days)' smart group")
+    
+    col3, col4 = st.columns(2)
+    
+    with col3:
+        with st.container(border=True):
+            st.markdown("##### 📘 Faculty Activity")
+            st.caption("Shows member counts and activity rates broken down by faculty (FAH, FELS, FEPS, FM, FSS, Professional Services).")
+            st.write("")
+            if st.button("Generate Faculty Report", key="faculty", use_container_width=True, type="primary"):
+                with st.spinner("Generating..."):
+                    filename = generate_faculty_activity_report()
+                st.success("✅ Done!")
+                offer_download(filename, "Download Report")
+    
+    with col4:
+        with st.container(border=True):
+            st.markdown("##### 🌐 Activity per Hub")
+            st.caption("Shows member counts and activity rates for each PCE Hub (AI & Society, Health, Nature, Future Cities).")
+            st.write("")
+            if st.button("Generate Hub Report", key="hub", use_container_width=True, type="primary"):
+                with st.spinner("Generating..."):
+                    filename = generate_activity_per_hub_report()
+                st.success("✅ Done!")
+                offer_download(filename, "Download Report")
+    
+    col5, col6 = st.columns(2)
+    
+    with col5:
+        with st.container(border=True):
+            st.markdown("##### 🏫 UoS vs Non-UoS")
+            st.caption("Compares activity rates between current University of Southampton members and external contacts.")
+            st.write("")
+            if st.button("Generate UoS Report", key="uos", use_container_width=True, type="primary"):
+                with st.spinner("Generating..."):
+                    filename = generate_uos_non_uos_activity_report()
+                st.success("✅ Done!")
+                offer_download(filename, "Download Report")
+    
+    with col6:
+        pass  # Empty for now
 
 
 # Run the app
