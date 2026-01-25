@@ -134,7 +134,7 @@ def main_app():
         st.divider()
         
         st.caption("University of Southampton")
-        st.caption("Public & Community Engagement")
+        st.caption("Public & Community Engagement Hubs")
     
     # Page header
     st.title("📊 Report Generator")
