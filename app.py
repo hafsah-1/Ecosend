@@ -186,7 +186,12 @@ def main_app():
         - Select **"Opened message"** 
         - Add each broadcast from the **last 90 days** using **+ OR** between them
         - Remove any broadcasts older than 90 days
+        """)
         
+        st.image("images/ecosend_messages_menu.png", caption="Select 'Opened message' from the Messages tab")
+        st.image("images/ecosend_filter_bar.png", caption="Add broadcasts with '+ OR' between them")
+        
+        st.markdown("""
         **Step 4:** Click **★ Save Smart Group** to save your changes
         
         **Step 5:** Come back here and generate your reports!
