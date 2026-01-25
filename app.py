@@ -190,10 +190,6 @@ def main_app():
         **Step 4:** Click **★ Save Smart Group** to save your changes
         
         **Step 5:** Come back here and generate your reports!
-        
-        ---
-        
-        💡 **Tip**: For fair hub comparisons, include broadcasts sent to "All Hubs" - this ensures every hub member had a chance to engage.
         """)
     
     st.write("")
