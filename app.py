@@ -159,7 +159,54 @@ def main_app():
                 offer_download(filename, "Download Report")
     
     with col2:
-        pass  # Empty for now
+        with st.container(border=True):
+            st.markdown("##### 📋 Copy for PERu Monitoring")
+            st.caption("Copy membership numbers in the right format for the PERu spreadsheet.")
+            st.write("")
+            if st.button("📋 Copy to Clipboard", key="peru_copy", use_container_width=True, type="primary"):
+                with st.spinner("Fetching data..."):
+                    from ecosend_client import get_all_people, HUB_SMART_GROUPS, UOS_SMART_GROUP
+                    import datetime
+                    
+                    people = get_all_people()
+                    
+                    # Calculate totals
+                    total = len(people)
+                    uos_count = sum(1 for p in people if UOS_SMART_GROUP in p.get('smart_groups', []))
+                    non_uos_count = total - uos_count
+                    
+                    # Hub counts
+                    nature_count = sum(1 for p in people if 'nature-biodiversity-sustainability' in p.get('smart_groups', []))
+                    health_count = sum(1 for p in people if 'health-wellbeing' in p.get('smart_groups', []))
+                    cities_count = sum(1 for p in people if 'future-cities' in p.get('smart_groups', []))
+                    ai_count = sum(1 for p in people if 'artificial-intelligence-ai-society' in p.get('smart_groups', []))
+                    
+                    # Format date as DD/MM/YYYY
+                    today = datetime.datetime.now().strftime("%d/%m/%Y")
+                    
+                    # Create tab-separated row (skip ratio column - it autofills)
+                    # Columns: Date | Total | Non-UoS | UoS | (skip ratio) | Nature | Health | Cities | AI
+                    row_data = f"{today}\t{total}\t{non_uos_count}\t{uos_count}\t\t{nature_count}\t{health_count}\t{cities_count}\t{ai_count}"
+                
+                st.success("✅ Data ready!")
+                
+                # Show preview
+                st.markdown("**Preview:**")
+                preview_data = {
+                    "Date": [today],
+                    "Total": [total],
+                    "Non-UoS": [non_uos_count],
+                    "UoS": [uos_count],
+                    "Nature": [nature_count],
+                    "Health": [health_count],
+                    "Cities": [cities_count],
+                    "AI": [ai_count]
+                }
+                st.dataframe(preview_data, hide_index=True)
+                
+                # Copy button using st.code (user can select and copy)
+                st.markdown("**Copy this row** (select all → copy → paste into Excel):")
+                st.code(row_data, language=None)
     
     st.write("")
     st.divider()
